@@ -1,0 +1,25 @@
+{
+  "name": "wiltshire-bin-day",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "alexa-sdk": "^1.0.9",
+    "bluebird": "^3.5.0",
+    "htmlparser2": "^3.9.2",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  },
+  "devDependencies": {
+    "mocha": "3.3.0",
+    "chai": "^3.5.0",
+    "chai-as-promised": "6.0.0",
+    "proxyquire": "^1.7.11",
+    "sinon": "^2.2.0"
+  },
+  "scripts": {
+    "test": "mocha ./tests/*.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
