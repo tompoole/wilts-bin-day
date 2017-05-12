@@ -1,12 +1,11 @@
 {
   "name": "wiltshire-bin-day",
   "version": "1.0.0",
-  "description": "",
+  "description": "Alexa Skill for getting rubbish collection days.",
   "main": "index.js",
   "dependencies": {
     "alexa-sdk": "^1.0.9",
     "bluebird": "^3.5.0",
-    "htmlparser2": "^3.9.2",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
   },
@@ -18,8 +17,8 @@
     "sinon": "^2.2.0"
   },
   "scripts": {
-    "test": "mocha ./tests/*.js"
+    "test": "mocha ./test/*.js"
   },
-  "author": "",
+  "author": "T Poole",
   "license": "ISC"
 }
