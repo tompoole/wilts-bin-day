@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Typescript",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/index.ts",
+            "outFiles": [
+                "${workspaceRoot}/build/**/*.js"
+            ],
+            "preLaunchTask": "build"
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Mocha Tests",
@@ -15,15 +25,12 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceRoot}/test/test-dateHumaniser.js"
+                "${workspaceRoot}/build/test/test-*.js"
             ],
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceRoot}\\index.js"
+            "preLaunchTask": "build",
+            "outFiles": [
+                "${workspaceRoot}/build/**/*.js"
+            ]
         }
     ]
 }

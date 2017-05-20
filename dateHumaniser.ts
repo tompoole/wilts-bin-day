@@ -1,4 +1,4 @@
-function humaniseDate(date) {
+export const humaniseDate = function(date: Date) {
     var now = getNow();
 
     if (date < now) {
@@ -8,13 +8,13 @@ function humaniseDate(date) {
         return 'Today';
     }
 
-    var diffInDays = (date - now)/86400000;
+    let diffInDays = (date.valueOf() - now.valueOf())/86400000;
 
     if (diffInDays === 1) {
         return "Tomorrow";
     }
 
-    var thisWeek = diffInDays < 7 && (date.getDay() > now.getDay());
+    let thisWeek = diffInDays < 7 && (date.getDay() > now.getDay());
 
     if (thisWeek) {
         return "This " + days[date.getDay()];
@@ -24,9 +24,9 @@ function humaniseDate(date) {
         return "A week today";
     }
     
-    var day = days[date.getDay()];
-    var monthDay = formatMonthDay(date.getDate());
-    var month = months[date.getMonth()];
+    let day = days[date.getDay()];
+    let monthDay = formatMonthDay(date.getDate());
+    let month = months[date.getMonth()];
 
     // Omit the month if date occurs this month
     if (now.getMonth() === date.getMonth()) {
@@ -37,11 +37,11 @@ function humaniseDate(date) {
     return`${day} ${monthDay} ${month}`; 
 }
 
-function formatMonthDay(monthDay){
-    var dayStr = monthDay.toString();
-    var lastChar = dayStr[dayStr.length-1];
-    var tensValue = dayStr.length > 1 ? dayStr.substr(-2,1) : "";
-    var suffix = "th";
+function formatMonthDay(monthDay: Number){
+    let dayStr = monthDay.toString();
+    let lastChar = dayStr[dayStr.length-1];
+    let tensValue = dayStr.length > 1 ? dayStr.substr(-2,1) : "";
+    let suffix = "th";
 
     if (tensValue != '1') {
         switch(lastChar) {
@@ -62,7 +62,7 @@ function formatMonthDay(monthDay){
     return dayStr + suffix;
 } 
 
-const days = {
+const days : {[key: number]: string} = {
     0: 'Sunday',
     1: 'Monday',
     2: 'Tuesday',
@@ -72,7 +72,7 @@ const days = {
     6: 'Saturday'
 }
 
-const months = {
+const months : {[key: number]: string} = {
     0: 'January',
     1: 'February',
     2: 'March',
@@ -87,16 +87,17 @@ const months = {
     11: 'December'
 }
 
-function getNow(){
-    if (exports.__nowOverride !== null) {
-        return exports.__nowOverride;
+function getNow():Date{
+    if (__nowOverride != null) {
+        return __nowOverride;
     }
 
-    var now = new Date();
+    let now = new Date();
     now.setHours(0,0,0);
     return now;
 }
 
-
-exports.__nowOverride = null;
-exports.humaniseDate = humaniseDate;
+var __nowOverride : Date | null = null;
+export var _setNowOverride = function(d : Date) {
+    __nowOverride = d;
+}

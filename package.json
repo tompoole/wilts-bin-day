@@ -5,20 +5,26 @@
   "main": "index.js",
   "dependencies": {
     "alexa-sdk": "^1.0.9",
-    "bluebird": "^3.5.0",
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
-    "mocha": "3.3.0",
+    "@types/alexa-sdk": "^1.0.4",
+    "@types/chai-as-promised": "0.0.30",
+    "@types/mocha": "^2.2.41",
     "chai": "^3.5.0",
     "chai-as-promised": "6.0.0",
-    "proxyquire": "^1.7.11",
-    "sinon": "^2.2.0"
+    "mocha": "3.3.0",
+    "mocha-typescript": "^1.1.2",
+    "typemoq": "^1.6.0"
   },
   "scripts": {
-    "test": "mocha ./test/*.js"
+    "pretest": "tsc",
+    "test": "mocha ./build/test/*.js"
   },
   "author": "T Poole",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tompoole/wilts-bin-day"
+  }
 }
