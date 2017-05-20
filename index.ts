@@ -5,11 +5,7 @@ var intent = GetCollectionsIntent.create();
 
 let handlers: Alexa.Handlers = {
     'LaunchRequest': function () {
-        this.emit('HelloWorldIntent');
-    },
-
-    'HelloWorldIntent': function () {
-        this.emit(':tell', 'Hello World!');
+        this.emit('GetCollectionsIntent');
     },
 
     'GetCollectionsIntent': async function() {

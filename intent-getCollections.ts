@@ -18,8 +18,18 @@ export class GetCollectionsIntent implements IIntent {
     }
 
     public async handler(alexa: Handler) {
-        let address = await this._addressService.getAddressId("SN151DF", "7 Cedar");
-        alexa.emit(":tell", "Hello there!");
+        let addressId:string;
+
+        try {
+            addressId = await this._addressService.getAddressId("SN151DF", "7 Cedar");
+        }
+        catch (e) {
+            console.error(e);
+            alexa.emit(":tell", "I'm sorry, I couldn't find your address.");
+            return;
+        }
+
+        alexa.emit(":tell", "Hello there! I think your address ID is " + addressId);
     }
 
     static create(): GetCollectionsIntent {
