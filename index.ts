@@ -1,21 +1,24 @@
 import * as Alexa from "alexa-sdk"
 import {GetCollectionsIntent} from './intent-getCollections'
 
-const handler = function(event: any, context: any, callback: any){
+var intent = GetCollectionsIntent.create();
+
+let handlers: Alexa.Handlers = {
+    'LaunchRequest': function () {
+        this.emit('HelloWorldIntent');
+    },
+
+    'HelloWorldIntent': function () {
+        this.emit(':tell', 'Hello World!');
+    },
+
+    'GetCollectionsIntent': async function() {
+        await intent.handler(this);
+    }
+ };
+
+ export const handler = function(event: any, context: any, callback: any) {
     var alexa = Alexa.handler(event, context);
-
-    let intent = new GetCollectionsIntent();
-
-    var handlers: Alexa.Handlers = {
-        'GetCollections': function() {
-            intent.handler(this);
-        }
-    };
-
     alexa.registerHandlers(handlers);
     alexa.execute();
-
-    
-};
-
-export { handler }
+ }

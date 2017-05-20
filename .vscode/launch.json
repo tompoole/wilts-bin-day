@@ -9,9 +9,6 @@
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/index.ts",
-            "outFiles": [
-                "${workspaceRoot}/build/**/*.js"
-            ],
             "preLaunchTask": "build"
         },
         {
@@ -25,12 +22,9 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceRoot}/build/test/test-*.js"
+                "${workspaceRoot}/test/test-*.js"
             ],
-            "preLaunchTask": "build",
-            "outFiles": [
-                "${workspaceRoot}/build/**/*.js"
-            ]
+            "preLaunchTask": "build"
         }
     ]
 }
