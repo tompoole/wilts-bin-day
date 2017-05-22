@@ -15,6 +15,7 @@ let handlers: Alexa.Handlers = {
 
  export const handler = function(event: any, context: any, callback: any) {
     var alexa = Alexa.handler(event, context);
+    alexa.appId = "";
     alexa.registerHandlers(handlers);
     alexa.execute();
  }

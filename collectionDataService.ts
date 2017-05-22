@@ -2,17 +2,11 @@ import { IWiltsApi } from './wiltshireApi';
 import constants from './constants';
 
 export interface ICollectionService {
-    getData(addressId:string): Promise<ICollectionData>
-}
-
-export interface ICollectionData {
-    waste?: ICollectionItem
-    blackBox?: ICollectionItem
-    plasticBottle?: ICollectionItem
-    garden?: ICollectionItem
+    getData(addressId:string): Promise<ICollectionItem[]>
 }
 
 export interface ICollectionItem {
+    id: number
     name: string
     date: Date
 }
@@ -25,15 +19,22 @@ export class CollectionDataService implements ICollectionService {
         this._wiltsApi = wiltsApi;
     }
 
-    public getData(addressId:string):Promise<ICollectionData> {
+    public getData(addressId:string):Promise<ICollectionItem[]> {
 
         return this._wiltsApi.getRawCollectionHtml(addressId).then((rawHtml : string) => {
-            let response : ICollectionData  = {
-                waste: this.getCollectionById(rawHtml, constants.collectionTypes.waste),
-                blackBox:this.getCollectionById(rawHtml, constants.collectionTypes.recycling),
-                plasticBottle: this.getCollectionById(rawHtml, constants.collectionTypes.plasticBottle),
-                garden: this.getCollectionById(rawHtml, constants.collectionTypes.garden)
-            };
+            let response: ICollectionItem[] = [];
+
+            let wasteCollection = this.getCollectionById(rawHtml, constants.collectionTypes.waste);
+            if (wasteCollection) response.push(wasteCollection);
+
+            let recyclingCollection = this.getCollectionById(rawHtml, constants.collectionTypes.recycling);
+            if (recyclingCollection) response.push(recyclingCollection);
+
+            let plasticBottleCollection = this.getCollectionById(rawHtml, constants.collectionTypes.plasticBottle);
+            if (plasticBottleCollection) response.push(plasticBottleCollection);
+
+            let gardenCollection = this.getCollectionById(rawHtml, constants.collectionTypes.garden);
+            if (gardenCollection) response.push(gardenCollection);
 
             return response;
         });
@@ -52,6 +53,6 @@ export class CollectionDataService implements ICollectionService {
         var date = new Date(matches[2].trim());
         date.setHours(0,0,0);
 
-        return { name, date };
+        return { id, name, date };
     }
 }

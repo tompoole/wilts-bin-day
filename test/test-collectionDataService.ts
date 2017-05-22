@@ -4,6 +4,7 @@ import { CollectionDataService } from '../collectionDataService'
 import { IWiltsApi } from '../wiltshireApi'
 import * as Moq from 'typemoq'
 import * as fs from 'fs';
+import constants from '../constants';
 
 @suite class DataServiceTests {
     apiMock: Moq.IMock<IWiltsApi>;
@@ -23,26 +24,27 @@ import * as fs from 'fs';
                     .returns(x => this.createPromise(this.getSampleDataFromFile("with-garden.html")) );
         
             return this.collectionDataService.getData('123').then(function(data) {
-                
-                expect(data.waste).is.not.undefined;
-                expect(data.garden).is.not.undefined;
 
+                let garden = data.find(x => x.id == constants.collectionTypes.garden);
+                expect(garden).is.not.undefined;
 
-                if (data.waste) {
-                    expect(data.waste.name).to.equal('Household waste');
-                    expect(data.waste.date).to.be.a('date');
-                    expect(data.waste.date.getDate()).to.eq(11)
-                    expect(data.waste.date.getMonth()).to.equal(4);
-                    expect(data.waste.date.getFullYear()).to.equal(2017);
+                if (garden) {
+                    expect(garden.name).to.equal('Garden waste');
+                    expect(garden.date).to.be.a('date');
+                    expect(garden.date.getDate()).to.eq(10)
+                    expect(garden.date.getMonth()).to.equal(4);
+                    expect(garden.date.getFullYear()).to.equal(2017);
                 }
 
+                let waste = data.find(x => x.id == constants.collectionTypes.waste);
+                expect(waste).is.not.undefined;
                 
-                if (data.garden) {
-                    expect(data.garden.name).to.equal('Garden waste');
-                    expect(data.garden.date).to.be.a('date');
-                    expect(data.garden.date.getDate()).to.eq(10);
-                    expect(data.garden.date.getMonth()).to.equal(4);
-                    expect(data.garden.date.getFullYear()).to.equal(2017);
+                if (waste) {
+                    expect(waste.name).to.equal('Household waste');
+                    expect(waste.date).to.be.a('date');
+                    expect(waste.date.getDate()).to.eq(11);
+                    expect(waste.date.getMonth()).to.equal(4);
+                    expect(waste.date.getFullYear()).to.equal(2017);
                 }
             });
     }
@@ -53,15 +55,18 @@ import * as fs from 'fs';
 
         return this.collectionDataService.getData('400').then(function(data) {
             
-            expect(data.waste).to.not.be.undefined;
+            var garden = data.find(x => x.id == constants.collectionTypes.garden);
+            expect(garden).to.be.undefined;
 
-            if (data.waste) {
-                expect(data.waste.name).to.equal('Household waste');
-                expect(data.waste.date).to.be.a('date');
-                expect(data.waste.date.getFullYear()).to.equal(2017);
+            var waste = data.find(x => x.id == constants.collectionTypes.waste);
+            expect(waste).to.not.be.undefined;
+
+            if (waste) {
+                expect(waste.name).to.equal('Household waste');
+                expect(waste.date).to.be.a('date');
+                expect(waste.date.getFullYear()).to.equal(2017);
             }
             
-            expect(data.garden).to.be.undefined;            
         });
     }
 
@@ -70,10 +75,7 @@ import * as fs from 'fs';
                     .returns(x => this.createPromise(this.getSampleDataFromFile("no-collections.html")) );
 
         return this.collectionDataService.getData('98').then(function(data) {
-            expect(data.blackBox).to.be.undefined;
-            expect(data.plasticBottle).to.be.undefined;
-            expect(data.waste).to.be.undefined;
-            expect(data.garden).to.be.undefined;
+            expect(data).to.be.empty;
         });
     }
 

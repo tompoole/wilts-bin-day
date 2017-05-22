@@ -1,14 +1,23 @@
 export const humaniseDate = function(date: Date) {
     var now = getNow();
 
-    if (date < now) {
+    let nowVal = now.valueOf(),
+        dateVal = date.valueOf();
+
+    console.log("date:", date, nowVal);
+    console.log(" now:", now, nowVal);
+
+    if (dateVal < nowVal) {
         return 'In the past...';
     }
-    else if (date === now) {
+    
+    if (dateVal == nowVal) {
         return 'Today';
     }
-
-    let diffInDays = (date.valueOf() - now.valueOf())/86400000;
+    
+    let diffInDays = (dateVal - nowVal)/86400000;
+    
+    console.log("diff:", diffInDays);
 
     if (diffInDays === 1) {
         return "Tomorrow";
@@ -30,11 +39,11 @@ export const humaniseDate = function(date: Date) {
 
     // Omit the month if date occurs this month
     if (now.getMonth() === date.getMonth()) {
-        return `${day} ${monthDay}`;
+        return `on ${day} ${monthDay}`;
     }
 
     // default format
-    return`${day} ${monthDay} ${month}`; 
+    return `on ${day} ${monthDay} ${month}`; 
 }
 
 function formatMonthDay(monthDay: Number){
@@ -93,7 +102,7 @@ function getNow():Date{
     }
 
     let now = new Date();
-    now.setHours(0,0,0);
+    now.setHours(0,0,0,0);
     return now;
 }
 
