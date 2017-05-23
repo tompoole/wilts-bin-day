@@ -1,11 +1,10 @@
+import {startOfToday} from 'date-fns'
+
 export const humaniseDate = function(date: Date) {
-    var now = getNow();
-
-    let nowVal = now.valueOf(),
-        dateVal = date.valueOf();
-
-    console.log("date:", date, nowVal);
-    console.log(" now:", now, nowVal);
+    let now = getNow(),
+        nowVal = now.valueOf(),
+        dateVal = date.valueOf(),
+        diffInDays = (dateVal - nowVal)/86400000;
 
     if (dateVal < nowVal) {
         return 'In the past...';
@@ -15,10 +14,6 @@ export const humaniseDate = function(date: Date) {
         return 'Today';
     }
     
-    let diffInDays = (dateVal - nowVal)/86400000;
-    
-    console.log("diff:", diffInDays);
-
     if (diffInDays === 1) {
         return "Tomorrow";
     }

@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "alexa-sdk": "^1.0.9",
+    "date-fns": "^1.28.5",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },

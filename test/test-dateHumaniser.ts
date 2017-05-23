@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript'
 import { _setNowOverride, humaniseDate } from '../dateHumaniser'
 
-@suite.only class DateHumaniserTests {
+@suite class DateHumaniserTests {
     fixedTodayDate: Date;
 
     constructor() {
