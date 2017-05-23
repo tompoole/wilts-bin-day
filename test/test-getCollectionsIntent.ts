@@ -55,7 +55,7 @@ import {expect} from 'chai';
         expect(response).to.contain("Your next collections are Cardboard Reycling, General Recycling and Household Waste");
     }
 
-    @test.only "Generates correct message "() {
+    @test "Generates correct message when multiple collections today after threshold time"() {
         let collectionData: ICollectionItem[] = [
             {id:1, name: "Garden", date: new Date(2017,4,28)},
             {id:2, name: "Household Waste", date: new Date(2017,4,25)},
