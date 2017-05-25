@@ -7,12 +7,14 @@ const intent = GetCollectionsIntent.create();
 
 let handlers: Alexa.Handlers = {
     'LaunchRequest': function () {
-        this.emit('GetCollectionsIntent');
+        console.log("Received LaunchRequest.")
+        this.emit('GetNextBinCollection');
     },
     'GetNextBinCollection': async function() {
         await intent.handler(this);
     },
     'AMAZON.HelpIntent': function() {
+        console.log("Received HelpIntent")
         this.emit(":tell", responses.Help);
     },
     'Unhandled': function() {

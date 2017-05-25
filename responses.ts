@@ -1,4 +1,5 @@
 const responses = {
+    'ErrorNoAccessToken': "Sorry, I couldn't get your address. Please ensure you have granted this skill access to your full address details.",    
     'ErrorGettingAddressData': "Sorry, I couldn't get your address. Please ensure you have entered your full address details into the Alexa App.",
     'ErrorFindingAddress': "I'm sorry, I couldn't find your address. Please ensure the address you have entered is within Wiltshire.",
     'ErrorGettingCollectionData': "Sorry, I couldn't get your collection information. Please try again later.",

@@ -6,6 +6,7 @@ import {Handler} from 'alexa-sdk'
 import {humaniseDate} from './dateHumaniser'
 import responses from './responses';
 import {Intent} from './intent'
+import ErrorType from "./errorTypes";
 
 export class GetCollectionsIntent implements Intent {
     _alexaApi: IAlexaApi;
@@ -34,7 +35,7 @@ export class GetCollectionsIntent implements Intent {
 
     createResponseFromCollectionData(collectionData: ICollectionItem[]): string {
         collectionData = collectionData.sort((a,b) => a.date.valueOf() - b.date.valueOf());
-
+        
         let firstCollection = collectionData[0];
  
         if (this.isToday(firstCollection.date) && this.getNow().getHours() >= 17)
@@ -62,8 +63,12 @@ export class GetCollectionsIntent implements Intent {
             address = await this._alexaApi.getAddressForDevice(alexa.event);
         }
         catch (e) {
-            console.error("Error getting address data", e);
-            alexa.emit(":tell", responses.ErrorGettingAddressData);
+            if (e == ErrorType.NoAccessToken) {
+                alexa.emit(":tell", responses.ErrorNoAccessToken);
+            }
+            else {
+                alexa.emit(":tell", responses.ErrorGettingAddressData);
+            }
             return;
         }
 

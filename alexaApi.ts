@@ -1,4 +1,5 @@
 import * as rp from 'request-promise-native'
+import ErrorType from './errorTypes'
 
 export interface AddressResponse {
     postcode: string;
@@ -33,7 +34,7 @@ export class AlexaApi {
         let deviceData = this.extractRequestDataFromAlexaEvent(alexaEvent);
 
         if (!deviceData.accessToken || !deviceData.deviceId) {
-            return new Promise<AddressResponse>((resolve,reject) => reject("Could not get AccessToken/DeviceID"));
+            return new Promise<AddressResponse>((resolve,reject) => reject(ErrorType.NoAccessToken));
         }
 
         console.log("Extracted request data from event: ", deviceData);
@@ -49,6 +50,13 @@ export class AlexaApi {
 
         return rp(request)
                .then(response => {
+
+                    console.log("Address response: ", response);
+
+                    if (!response.postalCode || !response.addressLine1) {
+                        throw ErrorType.InvalidAddress;
+                    }
+
                     return {
                         postcode: response.postalCode,
                         addressLine1: response.addressLine1
@@ -56,7 +64,7 @@ export class AlexaApi {
                 })
                 .catch(function(e) {
                     console.log("Error retriving address data from Alexa API", e);
-                    throw "Unable to get address data response from Alexa API";
+                    throw ErrorType.InvalidAddress;
                 });
     }
 

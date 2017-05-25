@@ -16,14 +16,15 @@ export class AddressService {
         return this._wiltsApi.getAddresses(postcode).then(function(addresses: Array<IAddress>) {
             let re = new RegExp("^"+addressFirstLine, 'i');
 
-            let filteredAddreses = addresses.filter(x => re.test(x.address));
+            let address = addresses.find(x => re.test(x.address));
 
-            if (filteredAddreses.length > 0) {
-                return filteredAddreses[0].UPRN;
+            if (address) {
+                return address.UPRN;
             }
             else {
                 throw "Could not find address";
             }
+            
         });
     }
 }
