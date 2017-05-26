@@ -1,6 +1,7 @@
 import * as Alexa from "alexa-sdk"
 import {Intent} from './intent'
 import {GetCollectionsIntent} from './intent-getCollections'
+import {SetAddressIntent} from './intent-setAddress'
 import responses from './responses'
 
 const intent = GetCollectionsIntent.create();
@@ -12,6 +13,10 @@ let handlers: Alexa.Handlers = {
     },
     'GetNextBinCollection': async function() {
         await intent.handler(this);
+    },
+    "SetAddress": async function() {
+        let addressHandler = SetAddressIntent.Create();
+        await addressHandler.handler(this);
     },
     'AMAZON.HelpIntent': function() {
         console.log("Received HelpIntent")

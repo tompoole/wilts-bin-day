@@ -6,6 +6,7 @@
     "configurations": [
     {
         "type": "node",
+        "protocol": "inspector",
         "request": "attach",
         "name": "Attach to Process",
         "processId": "${command:PickProcess}",
@@ -20,6 +21,7 @@
         },
         {
             "type": "node",
+            "protocol": "inspector",
             "request": "launch",
             "name": "Mocha Tests",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",

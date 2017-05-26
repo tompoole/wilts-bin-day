@@ -53,7 +53,7 @@ export class AlexaApi {
 
                     console.log("Address response: ", response);
 
-                    if (!response.postalCode || !response.addressLine1) {
+                    if (!response.postalCode) {
                         throw ErrorType.InvalidAddress;
                     }
 
