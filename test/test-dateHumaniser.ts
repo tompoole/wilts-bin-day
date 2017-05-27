@@ -47,14 +47,14 @@ import { _setNowOverride, humaniseDate } from '../dateHumaniser'
         var dateToHumanise = new Date(2017, 0, 12);
         var result = humaniseDate(dateToHumanise);
 
-        expect(result).to.contain('Thursday 12th');
+        expect(result).to.contain('Thursday the 12th');
     }
 
     @test 'should return "{DAY} {MONTHDAY} {MONTH}" for a date next month'() {
         var dateToHumanise = new Date(2017, 1, 3);
         var result = humaniseDate(dateToHumanise);
 
-        expect(result).to.contain('Friday 3rd February');
+        expect(result).to.contain('Friday the 3rd of February');
     }
 
 }

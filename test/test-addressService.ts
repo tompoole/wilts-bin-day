@@ -28,15 +28,15 @@ import constants from '../constants';
 
     
 
-    @test.only 'Can filter address correctly'() {
+    // @test 'Can filter address correctly'() {
 
-        this.apiMock.setup(x => x.getAddresses(Moq.It.isAnyString()))
-                    .returns(x => this.createResolvingPromise(this.collectionData));
+    //     this.apiMock.setup(x => x.getAddresses(Moq.It.isAnyString()))
+    //                 .returns(x => this.createResolvingPromise(this.collectionData));
         
-            return this.addressService.getAddressId('SN22 1AA', '3 Fake Street').then(function(id) {
-                expect(id).to.equal("1015");
-            });
-    }
+    //         return this.addressService.getAddressId('SN22 1AA', '3 Fake Street').then(function(id) {
+    //             expect(id).to.equal("1015");
+    //         });
+    // }
 
  
     private createResolvingPromise<T>(returnValue:T): Promise<T> {

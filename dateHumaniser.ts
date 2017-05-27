@@ -34,11 +34,11 @@ export const humaniseDate = function(date: Date) {
 
     // Omit the month if date occurs this month
     if (now.getMonth() === date.getMonth()) {
-        return `on ${day} ${monthDay}`;
+        return `on ${day} the ${monthDay}`;
     }
 
     // default format
-    return `on ${day} ${monthDay} ${month}`; 
+    return `on ${day} the ${monthDay} of ${month}`; 
 }
 
 function formatMonthDay(monthDay: Number){
