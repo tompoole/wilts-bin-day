@@ -1,4 +1,4 @@
-import { IWiltsApi } from './wiltshireApi';
+import { ICouncilApi } from './wiltshireApi';
 import constants from './constants';
 
 export interface ICollectionService {
@@ -13,9 +13,9 @@ export interface ICollectionItem {
 
 export class CollectionDataService implements ICollectionService {
     
-    private _wiltsApi:IWiltsApi;
+    private _wiltsApi:ICouncilApi;
 
-    constructor(wiltsApi: IWiltsApi ) {
+    constructor(wiltsApi: ICouncilApi ) {
         this._wiltsApi = wiltsApi;
     }
 

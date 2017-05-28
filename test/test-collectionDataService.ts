@@ -1,17 +1,17 @@
 import { suite, test } from "mocha-typescript";
 import { expect } from 'chai';
 import { CollectionDataService } from '../collectionDataService'
-import { IWiltsApi } from '../wiltshireApi'
+import { ICouncilApi } from '../wiltshireApi'
 import * as Moq from 'typemoq'
 import * as fs from 'fs';
 import constants from '../constants';
 
 @suite class DataServiceTests {
-    apiMock: Moq.IMock<IWiltsApi>;
+    apiMock: Moq.IMock<ICouncilApi>;
     collectionDataService: CollectionDataService;
 
     constructor() {
-        this.apiMock = Moq.Mock.ofType<IWiltsApi>();
+        this.apiMock = Moq.Mock.ofType<ICouncilApi>();
         this.collectionDataService = new CollectionDataService(this.apiMock.object);
     }
 

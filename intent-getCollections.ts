@@ -85,6 +85,7 @@ export class GetCollectionsIntent implements Intent {
         try {
             collectionData = await this._collectionService.getData(addressId);
             let response = this.createResponseFromCollectionData(collectionData);
+            console.log(`Successfully returned response for ${addressId}. Response was "${response}"`);
             alexa.emit(":tell", response);
         }
         catch (e) {

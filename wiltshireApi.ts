@@ -1,6 +1,6 @@
 import rp = require('request-promise-native')
 
-export interface IWiltsApi {
+export interface ICouncilApi {
     getAddresses(postcode: string): Promise<IAddress[]>
     getRawCollectionHtml(uprn:string): Promise<string>
 }
@@ -16,7 +16,7 @@ export interface IWiltsAddressResponse {
     message: string
 }
 
-export class WiltsApi implements IWiltsApi {
+export class WiltsApi implements ICouncilApi {
     
     public getAddresses(postcode: string) {    
         let options = {
