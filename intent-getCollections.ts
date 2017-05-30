@@ -3,10 +3,10 @@ import {WiltsApi} from './wiltshireApi';
 import {IAlexaApi, AlexaApi, AddressResponse} from './alexaApi';
 import {ICollectionService, ICollectionItem, CollectionDataService}  from './collectionDataService';
 import {Handler} from 'alexa-sdk'
-import {humaniseDate} from './dateHumaniser'
 import responses from './responses';
 import {Intent} from './intent'
 import ErrorType from "./errorTypes";
+import {createResponseFromCollectionData} from './responseGenerator'
 
 export class GetCollectionsIntent implements Intent {
     _alexaApi: IAlexaApi;
@@ -17,43 +17,6 @@ export class GetCollectionsIntent implements Intent {
         this._addressService = addressService;
         this._collectionService = collectionService;
         this._alexaApi = alexaApi;
-    }
-
-    _dateOverride: Date | undefined = undefined;
-
-    public getNow(): Date {
-        if (this._dateOverride) return new Date(this._dateOverride.valueOf());
-        return new Date();
-    }
-
-    private isToday(date:Date){
-        let now = this.getNow();
-        now.setHours(0,0,0,0);
-        date.setHours(0,0,0,0);
-        return (now.valueOf() === date.valueOf());
-    }
-
-    createResponseFromCollectionData(collectionData: ICollectionItem[]): string {
-        collectionData = collectionData.sort((a,b) => a.date.valueOf() - b.date.valueOf());
-        
-        let firstCollection = collectionData[0];
- 
-        if (this.isToday(firstCollection.date) && this.getNow().getHours() >= 17)
-        {
-            collectionData = collectionData.filter(x => x.date.valueOf() !== firstCollection.date.valueOf());
-            firstCollection = collectionData[0];
-        }
-
-        let allCollectionsOnDate = collectionData.filter(c => c.date.valueOf() == firstCollection.date.valueOf());
-
-        if (allCollectionsOnDate.length > 1) {
-            let allCollectionsStr = allCollectionsOnDate.map(x => x.name).sort().join(', ');
-            allCollectionsStr = allCollectionsStr.replace(/(, )(?!.*,)/, " and ");
-            return `Your next collections are ${allCollectionsStr} ${humaniseDate(firstCollection.date)}`;
-        }
-        else {
-            return `Your next collection is ${firstCollection.name} ${humaniseDate(firstCollection.date)}`;
-        }
     }
 
     public async handler(alexa: Handler) {
@@ -84,7 +47,7 @@ export class GetCollectionsIntent implements Intent {
 
         try {
             collectionData = await this._collectionService.getData(addressId);
-            let response = this.createResponseFromCollectionData(collectionData);
+            let response = createResponseFromCollectionData(collectionData);
             console.log(`Successfully returned response for ${addressId}. Response was "${response}"`);
             alexa.emit(":tell", response);
         }
