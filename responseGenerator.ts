@@ -24,7 +24,7 @@ export function createResponseFromCollectionData(collectionData: ICollectionItem
     
     let firstCollection = collectionData[0];
 
-    if (isToday(firstCollection.date) && getNow().getHours() >= 17)
+    if (isToday(firstCollection.date) && getNow().getHours() >= 12)
     {
         collectionData = collectionData.filter(x => x.date.valueOf() !== firstCollection.date.valueOf());
         firstCollection = collectionData[0];

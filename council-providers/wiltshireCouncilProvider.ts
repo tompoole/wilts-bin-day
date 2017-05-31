@@ -1,15 +1,6 @@
 import rp = require('request-promise-native')
+import {ICouncilApi, IAddress} from './ICouncilApi'
 
-export interface ICouncilApi {
-    getAddresses(postcode: string): Promise<IAddress[]>
-    getRawCollectionHtml(uprn:string): Promise<string>
-}
-
-export interface IAddress {
-    UPRN: string;
-    address: string;
-    district: string;
-}
 
 export interface IWiltsAddressResponse {
     response: IAddress[]
