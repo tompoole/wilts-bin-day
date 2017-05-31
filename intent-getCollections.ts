@@ -7,6 +7,8 @@ import responses from './responses';
 import {Intent} from './intent'
 import ErrorType from "./errorTypes";
 import {createResponseFromCollectionData} from './responseGenerator'
+import * as addressHelpers from './addressHelpers'
+
 
 export class GetCollectionsIntent implements Intent {
     _alexaApi: IAlexaApi;
@@ -32,6 +34,7 @@ export class GetCollectionsIntent implements Intent {
             else {
                 alexa.emit(":tell", responses.ErrorGettingAddressData);
             }
+
             return;
         }
 
@@ -40,8 +43,15 @@ export class GetCollectionsIntent implements Intent {
             addressId = await this._addressService.getAddressId(address.postcode, address.addressLine1);
         }
         catch (e) {
-            console.error(e);
-            alexa.emit(":tell", responses.ErrorFindingAddress);
+            console.error("Error finding address ", e);
+
+            if (!addressHelpers.isValidPostcode(address.postcode)) {
+                console.error("Invalid postcode ", address.postcode);
+                alexa.emit(":tell", responses.ErrorInvalidPostcode);
+            } else {
+                alexa.emit(":tell", responses.ErrorFindingAddress);
+            }
+
             return;
         }
 
@@ -52,7 +62,7 @@ export class GetCollectionsIntent implements Intent {
             alexa.emit(":tell", response);
         }
         catch (e) {
-            console.error(e);
+            console.error("Error getting collection data", e);
             alexa.emit(":tell", responses.ErrorGettingCollectionData);
         }
     }
