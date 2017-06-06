@@ -1,5 +1,6 @@
 import {IAddressService, AddressService} from './addressService';
-import {WiltsApi} from './wiltshireApi';
+import {WiltshireCouncilProvider} from './council-providers/wiltshireCouncilProvider';
+import {CouncilProviderFactory} from './councilProviderFactory'
 import {IAlexaApi, AlexaApi, AddressResponse} from './alexaApi';
 import {ICollectionService, ICollectionItem, CollectionDataService}  from './collectionDataService';
 import {Handler} from 'alexa-sdk'
@@ -8,17 +9,23 @@ import {Intent} from './intent'
 import ErrorType from "./errorTypes";
 import {createResponseFromCollectionData} from './responseGenerator'
 import * as addressHelpers from './addressHelpers'
+import { ICouncilProvider } from "./council-providers/ICouncilApi";
 
 
 export class GetCollectionsIntent implements Intent {
     _alexaApi: IAlexaApi;
     _addressService: IAddressService;
     _collectionService: ICollectionService;
+    _providerFactory: CouncilProviderFactory;
 
     constructor(addressService: IAddressService, collectionService: ICollectionService, alexaApi: IAlexaApi){
         this._addressService = addressService;
+
+        this._providerFactory = new CouncilProviderFactory();
+
         this._collectionService = collectionService;
         this._alexaApi = alexaApi;
+
     }
 
     public async handler(alexa: Handler) {
@@ -28,19 +35,31 @@ export class GetCollectionsIntent implements Intent {
             address = await this._alexaApi.getAddressForDevice(alexa.event);
         }
         catch (e) {
-            if (e == ErrorType.NoAccessToken) {
-                alexa.emit(":tell", responses.ErrorNoAccessToken);
-            }
-            else {
-                alexa.emit(":tell", responses.ErrorGettingAddressData);
-            }
 
-            return;
+            if (process.env["NODE_DEBUG"]) {
+                console.log("Setting address to debug data.")
+                address = {
+                    postcode:"SN2 1HD",
+                    addressLine1: "37 Rayfield Grove"
+                }
+            }
+            else { 
+                if (e == ErrorType.NoAccessToken) {
+                    alexa.emit(":tell", responses.ErrorNoAccessToken);
+                }
+                else {
+                    alexa.emit(":tell", responses.ErrorGettingAddressData);
+                }
+                return;
+            }
         }
 
+        let addressResult;
         try {
+            let providers = this._providerFactory.getCouncilProvidersByPostcode(address.postcode);
             console.log(`Getting address ID for address: ${address.postcode}, ${address.addressLine1}`);
-            addressId = await this._addressService.getAddressId(address.postcode, address.addressLine1);
+
+            addressResult = await this._addressService.getAddressId(providers, address.postcode, address.addressLine1);
         }
         catch (e) {
             console.error("Error finding address ", e);
@@ -56,9 +75,12 @@ export class GetCollectionsIntent implements Intent {
         }
 
         try {
-            collectionData = await this._collectionService.getData(addressId);
-            let response = createResponseFromCollectionData(collectionData);
-            console.log(`Successfully returned response for ${addressId}. Response was "${response}"`);
+            let collectionProvider = this._providerFactory.getCouncilProviderByName(addressResult.provider);
+            let rawData = await collectionProvider.getRawCollectionData(addressResult.UPRN)
+            let parsedData = collectionProvider.parseRawCollectionData(rawData);
+            let response = createResponseFromCollectionData(parsedData);
+
+            console.log(`Successfully returned response for ${addressResult.UPRN}. Response was "${response}"`);
             alexa.emit(":tell", response);
         }
         catch (e) {
@@ -68,8 +90,8 @@ export class GetCollectionsIntent implements Intent {
     }
 
     static create(): GetCollectionsIntent {
-        let wiltsApi = new WiltsApi(), alexaApi = new AlexaApi();
-        return new GetCollectionsIntent(new AddressService(wiltsApi), new CollectionDataService(wiltsApi), alexaApi);
+        let wiltsApi = new WiltshireCouncilProvider(), alexaApi = new AlexaApi();
+        return new GetCollectionsIntent(new AddressService(), new CollectionDataService(wiltsApi), alexaApi);
     }
 }
 

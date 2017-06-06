@@ -4,7 +4,7 @@ import {expect} from 'chai'
 
 @suite class TestHelpers {
 
-    @test.only "Postcode validator identifies valid postcodes"() {
+    @test "Postcode validator identifies valid postcodes"() {
 
         var validPostcodes = [
             "SN15 1AA",
@@ -22,7 +22,7 @@ import {expect} from 'chai'
         
     }
 
-    @test.only "Postcode validator identifies invalid postcodes"() {
+    @test "Postcode validator identifies invalid postcodes"() {
 
         var invalidPostcodes = [
             "SN15 1A",

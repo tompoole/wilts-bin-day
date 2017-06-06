@@ -1,0 +1,16 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<soap:Body>
+		<getRoundInfoForUPRNResponse xmlns="http://tempuri2.org/">
+			<getRoundInfoForUPRNResult>
+				<Rows xmlns="">
+					<Row>
+						<Round1>Refuse - Tomorrow (Friday) then every alternate Monday.$</Round1>
+						<Round2>Recycling - Tomorrow (Friday) then every alternate Monday.$</Round2>
+						<Round3>Plastic - Monday 05 June 2017 then every alternate Monday.$</Round3>
+						<Round4>Garden - Tomorrow (Friday) then every alternate Monday.$</Round4>
+					</Row>
+				</Rows>
+			</getRoundInfoForUPRNResult>
+		</getRoundInfoForUPRNResponse>
+	</soap:Body>
+</soap:Envelope>

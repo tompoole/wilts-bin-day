@@ -1,37 +1,54 @@
-import {IAddress, ICouncilApi} from './wiltshireApi'
+import {ICouncilProvider,IAddress} from './council-providers/ICouncilApi'
 
 export interface IAddressService {
-    getAddressId(postcode: string, addressFirstLine: string): Promise<string>
+    getAddressId(councilProviders: ICouncilProvider[], postcode: string, addressFirstLine: string): Promise<AddressResult>
 }
 
-export class AddressService {
-    _wiltsApi: ICouncilApi;
+export interface AddressResult {
+    provider: string;
+    UPRN: string;
+}
 
-    constructor(wiltsApi: ICouncilApi) {
-        this._wiltsApi = wiltsApi;
-    }
-
+export class AddressService implements IAddressService {
+    
     private static normaliseAddress(address: string) {
         return address.replace(/[^a-z0-9 ]/ig, '').trim();
     }
 
-    public getAddressId(postcode: string, addressFirstLine: string) {
+    private static extractHouseNumber(addressFirstLine: string) {
+        let match = /^[0-9]+/.exec(addressFirstLine);
+        return match ? match[0] : "";
+    }
 
+    public async getAddressId(councilProviders: ICouncilProvider[], postcode: string, addressFirstLine: string): Promise<AddressResult> {
+        let re = new RegExp(addressFirstLine, 'i');        
         addressFirstLine = AddressService.normaliseAddress(addressFirstLine);
+        let houseNumber = AddressService.extractHouseNumber(addressFirstLine);
+        
+        let uprn: string | undefined, providerName: string | undefined;
 
-        return this._wiltsApi.getAddresses(postcode).then(function(addresses: Array<IAddress>) {
-            let re = new RegExp(addressFirstLine, 'i');
+        for (let provider of councilProviders) {
+            let addresses = await provider.getAddresses(postcode, houseNumber);
+            if (addresses.length == 0) continue;
             
             addresses.forEach(x => x.address = AddressService.normaliseAddress(x.address))
             let address = addresses.find(x => re.test(x.address));
 
             if (address) {
-                return address.UPRN;
-            }
-            else {
-                throw "Could not find address";
-            }
-            
-        });
+                uprn = address.UPRN;
+                providerName = provider.name;
+                break;
+            }    
+        }
+
+       if (!uprn || !providerName) {
+           throw new Error("No UPRN found in any providers.");
+        }
+
+        return {
+            UPRN: uprn,
+            provider: providerName
+        };
+    
     }
 }

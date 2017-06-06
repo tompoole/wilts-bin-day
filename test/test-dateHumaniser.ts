@@ -1,13 +1,19 @@
 import { expect } from 'chai';
 import { suite, test } from 'mocha-typescript'
-import { _setNowOverride, humaniseDate } from '../dateHumaniser'
+import { humaniseDate } from '../dateHumaniser'
+import * as lolex from 'lolex'
 
-@suite class DateHumaniserTests {
+@suite.only class DateHumaniserTests {
+    clock: lolex.Clock;
     fixedTodayDate: Date;
+    
+    before() {
+        this.fixedTodayDate = new Date(2017, 0, 4)
+        this.clock = lolex.install(this.fixedTodayDate);        
+    }
 
-    constructor() {
-        this.fixedTodayDate = new Date(2017, 0, 4);
-        _setNowOverride(this.fixedTodayDate);
+    after() {
+        this.clock.uninstall();
     }
 
     @test 'should return "today" for today\'s date'() {

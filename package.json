@@ -6,17 +6,24 @@
   "dependencies": {
     "alexa-sdk": "^1.0.9",
     "date-fns": "^1.28.5",
+    "decode-html": "^1.0.2",
+    "html-entities": "^1.2.1",
     "request": "^2.81.0",
-    "request-promise-native": "^1.0.4"
+    "request-promise-native": "^1.0.4",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "@types/alexa-sdk": "^1.0.4",
     "@types/chai-as-promised": "0.0.30",
+    "@types/html-entities": "^1.2.15",
+    "@types/lolex": "^1.5.31",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.21",
     "@types/request-promise-native": "^1.0.5",
+    "@types/xml2js": "0.0.33",
     "chai": "^3.5.0",
     "chai-as-promised": "6.0.0",
+    "lolex": "^1.6.0",
     "mocha": "3.3.0",
     "mocha-typescript": "^1.1.2",
     "typemoq": "^1.6.0"

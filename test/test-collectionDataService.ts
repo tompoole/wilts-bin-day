@@ -1,17 +1,17 @@
 import { suite, test } from "mocha-typescript";
 import { expect } from 'chai';
 import { CollectionDataService } from '../collectionDataService'
-import { ICouncilApi } from '../wiltshireApi'
+import { ICouncilProvider } from '../council-providers/ICouncilApi'
 import * as Moq from 'typemoq'
 import * as fs from 'fs';
 import constants from '../constants';
 
 @suite class DataServiceTests {
-    apiMock: Moq.IMock<ICouncilApi>;
+    apiMock: Moq.IMock<ICouncilProvider>;
     collectionDataService: CollectionDataService;
 
     constructor() {
-        this.apiMock = Moq.Mock.ofType<ICouncilApi>();
+        this.apiMock = Moq.Mock.ofType<ICouncilProvider>();
         this.collectionDataService = new CollectionDataService(this.apiMock.object);
     }
 
@@ -20,7 +20,7 @@ import constants from '../constants';
     }
 
     @test 'Can parse garden collection data'() {
-        this.apiMock.setup(x => x.getRawCollectionHtml(Moq.It.isValue('123')))
+        this.apiMock.setup(x => x.getRawCollectionData(Moq.It.isValue('123')))
                     .returns(x => this.createPromise(this.getSampleDataFromFile("with-garden.html")) );
         
             return this.collectionDataService.getData('123').then(function(data) {
@@ -50,7 +50,7 @@ import constants from '../constants';
     }
 
     @test 'can parse collection data without garden'() {
-        this.apiMock.setup(x => x.getRawCollectionHtml(Moq.It.isValue('400')))
+        this.apiMock.setup(x => x.getRawCollectionData(Moq.It.isValue('400')))
                     .returns(x => this.createPromise(this.getSampleDataFromFile("without-garden.html")) );
 
         return this.collectionDataService.getData('400').then(function(data) {
@@ -71,7 +71,7 @@ import constants from '../constants';
     }
 
     @test 'should correctly parse empty collection data'() {
-        this.apiMock.setup(x => x.getRawCollectionHtml(Moq.It.isValue('98')))
+        this.apiMock.setup(x => x.getRawCollectionData(Moq.It.isValue('98')))
                     .returns(x => this.createPromise(this.getSampleDataFromFile("no-collections.html")) );
 
         return this.collectionDataService.getData('98').then(function(data) {

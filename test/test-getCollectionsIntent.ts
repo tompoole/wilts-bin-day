@@ -22,7 +22,7 @@ import {Handler} from 'alexa-sdk'
         this._getCollectionsIntent = new GetCollectionsIntent(this._addressServiceMock.object, this._collectionServiceMock.object, this._alexaApiMock.object);
     }
 
-    @test.only "Collection service"() {
+    @test "Collection service"() {
         
         let handlerMoq = Moq.Mock.ofType<Handler>();
 
@@ -37,7 +37,8 @@ import {Handler} from 'alexa-sdk'
         ];
         
         this._alexaApiMock.setup(x => x.getAddressForDevice(Moq.It.isAny())).returns(x => this.createResolvingPromise(address));
-        this._addressServiceMock.setup(x => x.getAddressId(Moq.It.isAnyString(), Moq.It.isAnyString())).returns(x => this.createResolvingPromise("1234"));
+        let result = {UPRN: "1234", provider: ""};
+        this._addressServiceMock.setup(x => x.getAddressId([], Moq.It.isAnyString(), Moq.It.isAnyString())).returns(x => this.createResolvingPromise(result));
         this._collectionServiceMock.setup(x => x.getData(Moq.It.isValue("1234"))).returns(x => this.createResolvingPromise(collectionData))
 
         this._getCollectionsIntent.handler(handlerMoq.object);

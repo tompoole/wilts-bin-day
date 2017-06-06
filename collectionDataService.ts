@@ -1,4 +1,4 @@
-import { ICouncilApi } from './wiltshireApi';
+import { ICouncilProvider } from './council-providers/ICouncilApi';
 import constants from './constants';
 
 export interface ICollectionService {
@@ -13,15 +13,15 @@ export interface ICollectionItem {
 
 export class CollectionDataService implements ICollectionService {
     
-    private _wiltsApi:ICouncilApi;
+    private councilProvider:ICouncilProvider;
 
-    constructor(wiltsApi: ICouncilApi ) {
-        this._wiltsApi = wiltsApi;
+    constructor(councilProvider: ICouncilProvider ) {
+        this.councilProvider = councilProvider;
     }
 
     public getData(addressId:string):Promise<ICollectionItem[]> {
 
-        return this._wiltsApi.getRawCollectionHtml(addressId).then((rawHtml : string) => {
+        return this.councilProvider.getRawCollectionData(addressId).then((rawHtml : string) => {
             let response: ICollectionItem[] = [];
 
             let wasteCollection = this.getCollectionById(rawHtml, constants.collectionTypes.waste);

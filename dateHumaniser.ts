@@ -1,8 +1,8 @@
-import {startOfToday} from 'date-fns'
+import clock from './clock'
 
 export const humaniseDate = function(date: Date) {
-    let now = getNow(),
-        nowVal = now.valueOf(),
+    let today = clock.nowWithoutTime(),
+        nowVal = today.valueOf(),
         dateVal = date.valueOf(),
         diffInDays = (dateVal - nowVal)/86400000;
 
@@ -18,7 +18,7 @@ export const humaniseDate = function(date: Date) {
         return "Tomorrow";
     }
 
-    let thisWeek = diffInDays < 7 && (date.getDay() > now.getDay());
+    let thisWeek = diffInDays < 7 && (date.getDay() > today.getDay());
 
     if (thisWeek) {
         return "This " + days[date.getDay()];
@@ -33,7 +33,7 @@ export const humaniseDate = function(date: Date) {
     let month = months[date.getMonth()];
 
     // Omit the month if date occurs this month
-    if (now.getMonth() === date.getMonth()) {
+    if (today.getMonth() === date.getMonth()) {
         return `on ${day} the ${monthDay}`;
     }
 
@@ -89,19 +89,4 @@ const months : {[key: number]: string} = {
     9: 'October',
     10: 'November',
     11: 'December'
-}
-
-function getNow():Date{
-    if (__nowOverride != null) {
-        return __nowOverride;
-    }
-
-    let now = new Date();
-    now.setHours(0,0,0,0);
-    return now;
-}
-
-var __nowOverride : Date | null = null;
-export var _setNowOverride = function(d : Date) {
-    __nowOverride = d;
 }
