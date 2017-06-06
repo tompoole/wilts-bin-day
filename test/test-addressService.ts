@@ -4,7 +4,6 @@ import { AddressService } from '../addressService'
 import { ICouncilProvider } from '../council-providers/ICouncilApi'
 import * as Moq from 'typemoq'
 import * as fs from 'fs';
-import constants from '../constants';
 
 @suite.only class AddressServiceTests {
     providerMock: Moq.IMock<ICouncilProvider>;

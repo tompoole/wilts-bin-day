@@ -2,7 +2,7 @@ import {IAddressService, AddressService} from './addressService';
 import {WiltshireCouncilProvider} from './council-providers/wiltshireCouncilProvider';
 import {CouncilProviderFactory} from './councilProviderFactory'
 import {IAlexaApi, AlexaApi, AddressResponse} from './alexaApi';
-import {ICollectionService, ICollectionItem, CollectionDataService}  from './collectionDataService';
+import {ICollectionItem}  from './collectionDataService';
 import {Handler} from 'alexa-sdk'
 import responses from './responses';
 import {Intent} from './intent'
@@ -15,15 +15,13 @@ import { ICouncilProvider } from "./council-providers/ICouncilApi";
 export class GetCollectionsIntent implements Intent {
     _alexaApi: IAlexaApi;
     _addressService: IAddressService;
-    _collectionService: ICollectionService;
     _providerFactory: CouncilProviderFactory;
 
-    constructor(addressService: IAddressService, collectionService: ICollectionService, alexaApi: IAlexaApi){
+    constructor(addressService: IAddressService, alexaApi: IAlexaApi){
         this._addressService = addressService;
 
         this._providerFactory = new CouncilProviderFactory();
 
-        this._collectionService = collectionService;
         this._alexaApi = alexaApi;
 
     }
@@ -90,8 +88,8 @@ export class GetCollectionsIntent implements Intent {
     }
 
     static create(): GetCollectionsIntent {
-        let wiltsApi = new WiltshireCouncilProvider(), alexaApi = new AlexaApi();
-        return new GetCollectionsIntent(new AddressService(), new CollectionDataService(wiltsApi), alexaApi);
+        let alexaApi = new AlexaApi();
+        return new GetCollectionsIntent(new AddressService(),  alexaApi);
     }
 }
 

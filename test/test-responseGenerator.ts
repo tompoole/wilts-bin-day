@@ -1,7 +1,7 @@
 import {GetCollectionsIntent} from '../intent-getCollections';
 import {suite, test} from 'mocha-typescript';
 import * as Moq from 'typemoq';
-import { ICollectionService, ICollectionItem } from "../collectionDataService";
+import { ICollectionItem } from "../collectionDataService";
 import { IAlexaApi } from "../alexaApi";
 import { IAddressService } from "../addressService";
 import {expect} from 'chai';

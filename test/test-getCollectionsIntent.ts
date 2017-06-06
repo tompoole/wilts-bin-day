@@ -1,7 +1,7 @@
 import {GetCollectionsIntent} from '../intent-getCollections';
 import {suite, test} from 'mocha-typescript';
 import * as Moq from 'typemoq';
-import { ICollectionService, ICollectionItem } from "../collectionDataService";
+import { ICollectionItem } from "../collectionDataService";
 import { IAlexaApi } from "../alexaApi";
 import { IAddressService } from "../addressService";
 import {expect} from 'chai';
@@ -9,17 +9,14 @@ import {Handler} from 'alexa-sdk'
 
 @suite class GetCollectionsIntentTests {
     _getCollectionsIntent: GetCollectionsIntent;
-    _collectionServiceMock: Moq.IMock<ICollectionService>;
     _addressServiceMock: Moq.IMock<IAddressService>;
     _alexaApiMock: Moq.IMock<IAlexaApi>;
 
     constructor() {
-
-        this._collectionServiceMock = Moq.Mock.ofType<ICollectionService>();
         this._addressServiceMock = Moq.Mock.ofType<IAddressService>();
         this._alexaApiMock = Moq.Mock.ofType<IAlexaApi>();
         
-        this._getCollectionsIntent = new GetCollectionsIntent(this._addressServiceMock.object, this._collectionServiceMock.object, this._alexaApiMock.object);
+        this._getCollectionsIntent = new GetCollectionsIntent(this._addressServiceMock.object,  this._alexaApiMock.object);
     }
 
     @test "Collection service"() {
@@ -39,7 +36,6 @@ import {Handler} from 'alexa-sdk'
         this._alexaApiMock.setup(x => x.getAddressForDevice(Moq.It.isAny())).returns(x => this.createResolvingPromise(address));
         let result = {UPRN: "1234", provider: ""};
         this._addressServiceMock.setup(x => x.getAddressId([], Moq.It.isAnyString(), Moq.It.isAnyString())).returns(x => this.createResolvingPromise(result));
-        this._collectionServiceMock.setup(x => x.getData(Moq.It.isValue("1234"))).returns(x => this.createResolvingPromise(collectionData))
 
         this._getCollectionsIntent.handler(handlerMoq.object);
 
