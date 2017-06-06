@@ -3,7 +3,7 @@ import { suite, test } from 'mocha-typescript'
 import { humaniseDate } from '../dateHumaniser'
 import * as lolex from 'lolex'
 
-@suite.only class DateHumaniserTests {
+@suite class DateHumaniserTests {
     clock: lolex.Clock;
     fixedTodayDate: Date;
     

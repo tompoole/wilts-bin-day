@@ -12,7 +12,6 @@ export class SwindonCouncilProvider implements ICouncilProvider {
 
     getAddresses(postcode: string, houseNumber: string): Promise<IAddress[]> {
         let xml = `<?xml version="1.0" encoding="utf-8" ?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><getAddressFromPostcode xmlns="http://tempuri2.org/"><username>UN</username><password>PW</password><council>SWN</council><searchString>PC=${postcode}$HN=${houseNumber}$ST=$TW=</searchString></getAddressFromPostcode></soap:Body></soap:Envelope>`
-        console.log(xml);
         let request = {
             url: "https://collections-swindon.azurewebsites.net/webservice2.asmx",
             method: "POST",
@@ -23,7 +22,6 @@ export class SwindonCouncilProvider implements ICouncilProvider {
         };
 
         return rp(request).then((response) => {
-            console.log(response);
             let parseResult = parse(response);
             let rows = parseResult.root.children[0].children[0].children[0].children[0].children;
             
@@ -91,7 +89,7 @@ export class SwindonCouncilProvider implements ICouncilProvider {
                 let matches = re.exec(content);
 
                 if (matches == null) {
-                    console.error("No match for " + content);
+                    // console.error("No match for " + content);
                     return {id: -1, name: "", date: new Date()};
                 }
                 

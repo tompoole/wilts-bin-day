@@ -1,10 +1,11 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from "chai-as-promised";
-import { suite, test } from 'mocha-typescript'
+import { suite, test, slow, timeout } from 'mocha-typescript'
 import { WiltshireCouncilProvider } from '../council-providers/wiltshireCouncilProvider'
 
 
-@suite class WiltsApiTest {
+@suite(slow(1000), timeout(2000)) 
+class WiltsApiTest {
     
     wiltsApi:WiltshireCouncilProvider;
 

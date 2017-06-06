@@ -5,7 +5,7 @@ import { ICouncilProvider } from '../council-providers/ICouncilApi'
 import * as Moq from 'typemoq'
 import * as fs from 'fs';
 
-@suite.only class AddressServiceTests {
+@suite class AddressServiceTests {
     providerMock: Moq.IMock<ICouncilProvider>;
     addressService: AddressService;
     providers: ICouncilProvider[]

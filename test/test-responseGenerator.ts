@@ -8,7 +8,7 @@ import {expect} from 'chai';
 import * as lolex from 'lolex'
 import {createResponseFromCollectionData} from '../responseGenerator';
 
-@suite.only class ResponseGeneratorTests {
+@suite class ResponseGeneratorTests {
 
     clock : lolex.Clock;
     

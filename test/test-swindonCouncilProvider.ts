@@ -1,24 +1,27 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from "chai-as-promised";
-import { suite, test } from 'mocha-typescript'
+import { suite, test, timeout, slow } from 'mocha-typescript'
 import { SwindonCouncilProvider } from '../council-providers/swindonCouncilProvider'
 import * as fs from 'fs';
+import * as lolex from 'lolex';
 
-@suite class SwindonCouncilProviderTests {
+@suite(slow(1000), timeout(2000)) 
+class SwindonCouncilProviderTests {
 
     councilProvider:SwindonCouncilProvider;
-
-    constructor() {
-        this.councilProvider = new SwindonCouncilProvider();
-         chai.should();
-         chai.use(chaiAsPromised);
-    }
+    clock: lolex.Clock;
 
     before() {
+        this.councilProvider = new SwindonCouncilProvider();
+        
+        chai.should();
+        chai.use(chaiAsPromised);
+
+        this.clock =lolex.install(new Date(2017, 5, 2));
     }
 
     after() {
-        
+        this.clock.uninstall();
     }
 
     @test 'can get a list of address based on postcode'() {
