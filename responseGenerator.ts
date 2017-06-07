@@ -1,4 +1,4 @@
-import {ICollectionItem}  from './collectionDataService';
+import {ICollectionItem}  from './council-providers/ICouncilApi';
 import {humaniseDate} from './dateHumaniser'
 import clock from './clock'
 

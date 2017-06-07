@@ -1,15 +1,13 @@
 import {IAddressService, AddressService} from './addressService';
-import {WiltshireCouncilProvider} from './council-providers/wiltshireCouncilProvider';
 import {CouncilProviderFactory} from './councilProviderFactory'
 import {IAlexaApi, AlexaApi, AddressResponse} from './alexaApi';
-import {ICollectionItem}  from './collectionDataService';
 import {Handler} from 'alexa-sdk'
 import responses from './responses';
 import {Intent} from './intent'
 import ErrorType from "./errorTypes";
 import {createResponseFromCollectionData} from './responseGenerator'
 import * as addressHelpers from './addressHelpers'
-import { ICouncilProvider } from "./council-providers/ICouncilApi";
+import { ICouncilProvider, ICollectionItem } from "./council-providers/ICouncilApi";
 
 
 export class GetCollectionsIntent implements Intent {
