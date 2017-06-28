@@ -2,6 +2,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from "chai-as-promised";
 import { suite, test, slow, timeout } from 'mocha-typescript'
 import { BristolCouncilProvider } from '../council-providers/bristolCouncilProvider'
+import * as fs from 'fs';
 
 
 @suite.only(slow(1000), timeout(5000)) 
@@ -40,16 +41,35 @@ class BristolCouncilProviderTests {
         return promise.should.be.eventually.rejected;
     }
 
-    @test.only 'returns raw collection HTML with a valid uprn'() {
+    @test 'returns raw collection HTML with a valid uprn'() {
         return this.provider.getRawCollectionData('UPRN000000045787').then(function(r) {
            r.should.be.a('string');
            r.should.contain("Collection days we have listed for");
-        //    console.log(r);
         });
     }
 
     @test 'returns an error with an invalid uprn'() {
-        // let promise = this.provider.getRawCollectionData('cake');
-        // return promise.should.be.eventually.rejected;
+        let promise = this.provider.getRawCollectionData('cake');
+        return promise.should.be.eventually.rejected;
+    }
+
+    @test.only 'Can parse raw collection data'() {
+        let response = this.provider;
+
+        let file = this.loadFile("standard.html");
+        let collectionData = this.provider.parseRawCollectionData(file);
+
+        collectionData.length.should.be.equal(2);
+
+        collectionData[0].name.should.be.equal("Refuse");
+        
+        collectionData[1].date.should.be.a('date');
+        collectionData[1].date.getFullYear().should.be.equal(2017);
+        collectionData[1].date.getMonth().should.be.equal(5);
+        collectionData[1].date.getDate().should.be.equal(8);
+    }
+
+    private loadFile(file: string) {
+        return fs.readFileSync('test/data/bristol/' + file, 'utf8');
     }
 }

@@ -1,5 +1,6 @@
 import { ICouncilProvider, IAddress, ICollectionItem } from './ICouncilApi'
 import * as rp from 'request-promise-native';
+import * as cheerio from 'cheerio';
 
 export class BristolCouncilProvider implements ICouncilProvider {
     
@@ -45,8 +46,8 @@ export class BristolCouncilProvider implements ICouncilProvider {
                 });
             }
         });
-
     }
+
     getRawCollectionData(uprn: string): Promise<string> {
         let request = {
             uri: "http://www2.bristol.gov.uk/forms/collection-day-finder/confirmation",
@@ -74,7 +75,47 @@ export class BristolCouncilProvider implements ICouncilProvider {
         });
     }
     parseRawCollectionData(rawData: any): ICollectionItem[] {
-        throw new Error("Method not implemented.");
+        let $ = cheerio.load(rawData);
+
+        let tds = $(".collection-rounds tr td");
+
+        let items = tds.toArray()
+                       .map(e => $(e).text().trim())
+                       .filter(x => x.length > 0);
+
+    
+        let totalCollections = items.length / 3;
+        let collections : ICollectionItem[] = [];
+
+        for (let i = 0; i < totalCollections; i ++) {
+            let baseIndex = i * 3;
+            let name = items[baseIndex];
+            let nextCollection = items[baseIndex+2];
+
+            collections.push({
+                id: 0,
+                name: name,
+                date: this.parseDate(nextCollection)
+            })
+
+        }
+
+        return collections;
+    }
+
+    private parseDate(dateStr: string) : Date {
+        let re = /([0-9]{2})-([0-9]{2})-([0-9]{4})/;
+        let result = re.exec(dateStr);
+
+        if (!result) {
+            throw new Error("Could not parse date " + dateStr);
+        }
+
+        let day = parseInt(result[1], 10);
+        let month = parseInt(result[2], 10);
+        let year = parseInt(result[3], 10);
+
+        return new Date(year, month - 1, day, 0, 0, 0, 0);
     }
 
 }

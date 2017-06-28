@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "alexa-sdk": "^1.0.9",
+    "cheerio": "^1.0.0-rc.1",
     "date-fns": "^1.28.5",
     "decode-html": "^1.0.2",
     "html-entities": "^1.2.1",
@@ -15,6 +16,7 @@
   "devDependencies": {
     "@types/alexa-sdk": "^1.0.4",
     "@types/chai-as-promised": "0.0.30",
+    "@types/cheerio": "^0.22.1",
     "@types/html-entities": "^1.2.15",
     "@types/lolex": "^1.5.31",
     "@types/mocha": "^2.2.41",
