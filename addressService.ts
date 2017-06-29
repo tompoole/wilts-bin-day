@@ -12,7 +12,9 @@ export interface AddressResult {
 export class AddressService implements IAddressService {
     
     private static normaliseAddress(address: string) {
-        return address.replace(/[^a-z0-9 ]/ig, '').trim();
+        address = address.replace(/[^a-z0-9 ]/gi, '').trim();
+        address = address.replace(/\s+(?:Street|Lane|Road|Boulevard|Grove|St|Ln|Rd|Bv|Grv)$/i, '');
+        return address;
     }
 
     private static extractHouseNumber(addressFirstLine: string) {
@@ -21,10 +23,13 @@ export class AddressService implements IAddressService {
     }
 
     public async getAddressId(councilProviders: ICouncilProvider[], postcode: string, addressFirstLine: string): Promise<AddressResult> {
-        let re = new RegExp(addressFirstLine, 'i');        
         addressFirstLine = AddressService.normaliseAddress(addressFirstLine);
         let houseNumber = AddressService.extractHouseNumber(addressFirstLine);
+        let re = new RegExp(addressFirstLine, 'i');        
+
         
+        console.log("Searching for address " + addressFirstLine);
+
         let uprn: string | undefined, providerName: string | undefined;
 
         for (let provider of councilProviders) {

@@ -23,12 +23,14 @@
     "@types/node": "^7.0.21",
     "@types/request-promise-native": "^1.0.5",
     "@types/xml2js": "0.0.33",
+    "@types/yargs": "^6.6.0",
     "chai": "^3.5.0",
     "chai-as-promised": "6.0.0",
     "lolex": "^1.6.0",
     "mocha": "3.3.0",
     "mocha-typescript": "^1.1.2",
-    "typemoq": "^1.6.0"
+    "typemoq": "^1.6.0",
+    "yargs": "^8.0.2"
   },
   "scripts": {
     "pretest": "tsc",

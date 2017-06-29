@@ -83,6 +83,22 @@ import * as fs from 'fs';
                     })
     }
 
+    @test 'Can filter with differing street suffix'() {
+        let addressData =  [
+            {"address": "1 Fake St, Sometown, Wiltshire. SN22 1AA", "UPRN": "1005", "district": "Someplace"},        
+            {"address": "2 Fake St, Sometown, Wiltshire. SN22 1AA", "UPRN": "1010", "district": "Someplace"},
+            {"address": "3 Fake St, Sometown, Wiltshire. SN22 1AA", "UPRN": "1022", "district": "Someplace"},
+        ];
+
+        this.providerMock.setup(x => x.getAddresses(Moq.It.isValue("SN22 1AA"), Moq.It.isAnyString()))
+                         .returns(x => this.createResolvingPromise(addressData));
+
+        return this.addressService.getAddressId(this.providers,'SN22 1AA', '3 Fake street')
+                   .then(result => {
+                        expect(result.UPRN).to.equal("1022");
+                    })
+    }
+
      @test 'Can get results from second provider, if none are found in first.'() {
          let addressData1 =  [
             {"address": "1 Fake Street, Sometown, Wiltshire. SN22 1AA", "UPRN": "1005", "district": "Someplace"},        
@@ -111,7 +127,7 @@ import * as fs from 'fs';
              });
      }
 
-     @test.only 'Returns error if no results in any provider'() {
+     @test 'Returns error if no results in any provider'() {
         let addressData = [
            {"address": "1 Fake Street, Sometown, Wiltshire. SN22 1AA", "UPRN": "1005", "district": "Someplace"},        
         ];

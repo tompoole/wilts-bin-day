@@ -3,7 +3,6 @@ import {SwindonCouncilProvider} from './council-providers/swindonCouncilProvider
 import {WiltshireCouncilProvider} from './council-providers/wiltshireCouncilProvider'
 import {BristolCouncilProvider} from './council-providers/bristolCouncilProvider';
 
-
 import * as addressHelpers from './addressHelpers'
 
 interface ICouncil {
@@ -16,8 +15,8 @@ export class CouncilProviderFactory {
     private councils: ICouncil[] = [
         {name: "Swindon", postcodes: ["SN1", "SN2", "SN25", "SN26", "SN5", "SN4", "SN6"]},
         {name: "Wiltshire", postcodes: ["BA12", "BA13", "BA14", "BA15", "GL8", "RG17", "SN10", "SN11", "SN12", "SN13", "SN14", "SN15", "SN16", "SN4", "SN5", "SN6", "SN8", "SN9", "SP1", "SP11", "SP2", "SP3", "SP4", "SP5", "SP7", "SP9"]},
-        {name: "Bristol", postcodes: ["BS1", "BS2", "BS3", "BS4"]}
-    ]
+        {name: "Bristol", postcodes: ["BS1", "BS2", "BS3", "BS4", "BS5", "BS6", "BS7", "BS8", "BS9", "BS10", "BS11", "BS13", "BS14", "BS15", "BS16", "BS20", "BS31", "BS34", "BS41"]}
+    ];
 
     public getCouncilProvidersByPostcode(postcode: string): ICouncilProvider[] {
         let outcode = addressHelpers.getOutwardCodeFromPostcode(postcode);

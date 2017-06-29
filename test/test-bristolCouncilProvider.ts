@@ -5,7 +5,7 @@ import { BristolCouncilProvider } from '../council-providers/bristolCouncilProvi
 import * as fs from 'fs';
 
 
-@suite.only(slow(1000), timeout(5000)) 
+@suite(slow(1000), timeout(5000)) 
 class BristolCouncilProviderTests {
     
     provider:BristolCouncilProvider;
@@ -53,7 +53,7 @@ class BristolCouncilProviderTests {
         return promise.should.be.eventually.rejected;
     }
 
-    @test.only 'Can parse raw collection data'() {
+    @test 'Can parse raw collection data'() {
         let response = this.provider;
 
         let file = this.loadFile("standard.html");
