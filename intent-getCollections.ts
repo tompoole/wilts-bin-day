@@ -17,11 +17,8 @@ export class GetCollectionsIntent implements Intent {
 
     constructor(addressService: IAddressService, alexaApi: IAlexaApi){
         this._addressService = addressService;
-
         this._providerFactory = new CouncilProviderFactory();
-
         this._alexaApi = alexaApi;
-
     }
 
     public async handler(alexa: Handler) {
@@ -31,23 +28,14 @@ export class GetCollectionsIntent implements Intent {
             address = await this._alexaApi.getAddressForDevice(alexa.event);
         }
         catch (e) {
+            if (e == ErrorType.NoAccessToken) {
+                alexa.emit(":tell", responses.ErrorNoAccessToken);
+            }
+            else {
+                alexa.emit(":tell", responses.ErrorGettingAddressData);
+            }
 
-            if (process.env["NODE_DEBUG"]) {
-                console.log("Setting address to debug data.")
-                address = {
-                    postcode:"SN2 1HD",
-                    addressLine1: "37 Rayfield Grove"
-                }
-            }
-            else { 
-                if (e == ErrorType.NoAccessToken) {
-                    alexa.emit(":tell", responses.ErrorNoAccessToken);
-                }
-                else {
-                    alexa.emit(":tell", responses.ErrorGettingAddressData);
-                }
-                return;
-            }
+            return;
         }
 
         let addressResult;
@@ -63,7 +51,8 @@ export class GetCollectionsIntent implements Intent {
             if (!addressHelpers.isValidPostcode(address.postcode)) {
                 console.error("Invalid postcode ", address.postcode);
                 alexa.emit(":tell", responses.ErrorInvalidPostcode);
-            } else {
+            } 
+            else {
                 alexa.emit(":tell", responses.ErrorFindingAddress);
             }
 
@@ -71,12 +60,12 @@ export class GetCollectionsIntent implements Intent {
         }
 
         try {
-            let collectionProvider = this._providerFactory.getCouncilProviderByName(addressResult.provider);
-            let rawData = await collectionProvider.getRawCollectionData(addressResult.UPRN)
-            let parsedData = collectionProvider.parseRawCollectionData(rawData);
+            let councilProvider = this._providerFactory.getCouncilProviderByName(addressResult.provider);
+            let rawData = await councilProvider.getRawCollectionData(addressResult.UPRN)
+            let parsedData = councilProvider.parseRawCollectionData(rawData);
             let response = createResponseFromCollectionData(parsedData);
 
-            console.log(`Successfully returned response for ${addressResult.UPRN}. Response was "${response}"`);
+            console.log(`Successfully returned response for ${addressResult.UPRN} using Provider ${councilProvider.name}. Response was "${response}"`);
             alexa.emit(":tell", response);
         }
         catch (e) {
@@ -87,7 +76,7 @@ export class GetCollectionsIntent implements Intent {
 
     static create(): GetCollectionsIntent {
         let alexaApi = new AlexaApi();
-        return new GetCollectionsIntent(new AddressService(),  alexaApi);
+        return new GetCollectionsIntent(new AddressService(), alexaApi);
     }
 }
 

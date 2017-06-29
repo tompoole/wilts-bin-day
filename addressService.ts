@@ -42,7 +42,8 @@ export class AddressService implements IAddressService {
         }
 
        if (!uprn || !providerName) {
-           throw new Error("No UPRN found in any providers.");
+           let providers = councilProviders.map(p => p.name).join(', ');
+           throw new Error("No UPRN found in any providers. Searched: " + providers);
         }
 
         return {

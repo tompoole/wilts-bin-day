@@ -102,13 +102,38 @@ import * as fs from 'fs';
          provider2.setup(x => x.getAddresses(Moq.It.isValue("BA44 2AB"), Moq.It.isValue("5")))
                   .returns(x => this.createResolvingPromise(addressData2));
 
-         let providers = [this.providerMock.object, provider2.object];
+        let providers = [this.providerMock.object, provider2.object];
 
-         this.addressService.getAddressId(providers, "BA44 2AB", "5 Some Lane")
+        return this.addressService.getAddressId(providers, "BA44 2AB", "5 Some Lane")
              .then(r => {
                  expect(r.provider).to.equal("MockProvider2");
                  expect(r.UPRN).to.equal("9292");
-             })
+             });
+     }
+
+     @test.only 'Returns error if no results in any provider'() {
+        let addressData = [
+           {"address": "1 Fake Street, Sometown, Wiltshire. SN22 1AA", "UPRN": "1005", "district": "Someplace"},        
+        ];
+        const postcode = "NO1 1AA", houseNumber = "44";
+
+        this.providerMock.setup(x => x.getAddresses(Moq.It.isValue(postcode), Moq.It.isValue(houseNumber)))
+                          .returns(x => this.createResolvingPromise(addressData));
+
+        let provider2 = Moq.Mock.ofType<ICouncilProvider>();
+        provider2.setup(x => x.name).returns(x => "MockProvider2");
+        provider2.setup(x => x.getAddresses(Moq.It.isValue(postcode), Moq.It.isValue(houseNumber)))
+                 .returns(x => this.createResolvingPromise([]));
+
+        let providers = [this.providerMock.object, provider2.object];
+        
+        return this.addressService.getAddressId(providers, postcode, houseNumber)
+                   .catch(e => {
+                       expect(e).to.be.a('error');
+
+                       let err = e as Error;
+                       expect(err.message).to.contain("MockProvider1, MockProvider2");
+                   });
      }
 
  
