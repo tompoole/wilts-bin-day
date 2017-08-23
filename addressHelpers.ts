@@ -4,7 +4,7 @@ export function isValidPostcode(postcode: string): boolean {
 }
 
 export function getOutwardCodeFromPostcode(postcode: string) {
-    let re = /^[a-z]{1,2}[0-9]{1,2}/i;
+    let re = /^([a-z]{1,2}[0-9]{1,2})\s?[0-9]{1}[a-z]{2}/i;
     let matches = re.exec(postcode);
-    return matches != null ? matches[0] : ""; 
+    return matches != null ? matches[1] : ""; 
 }

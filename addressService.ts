@@ -25,10 +25,7 @@ export class AddressService implements IAddressService {
     public async getAddressId(councilProviders: ICouncilProvider[], postcode: string, addressFirstLine: string): Promise<AddressResult> {
         addressFirstLine = AddressService.normaliseAddress(addressFirstLine);
         let houseNumber = AddressService.extractHouseNumber(addressFirstLine);
-        let re = new RegExp(addressFirstLine, 'i');        
-
-        
-        console.log("Searching for address " + addressFirstLine);
+        let addressRe = new RegExp(addressFirstLine, 'i');        
 
         let uprn: string | undefined, providerName: string | undefined;
 
@@ -37,11 +34,12 @@ export class AddressService implements IAddressService {
             if (addresses.length == 0) continue;
             
             addresses.forEach(x => x.address = AddressService.normaliseAddress(x.address))
-            let address = addresses.find(x => re.test(x.address));
+            let address = addresses.find(x => addressRe.test(x.address));
 
             if (address) {
                 uprn = address.UPRN;
                 providerName = provider.name;
+                console.log(`Found address. UPRN: ${address.UPRN}, Address: ${address.address}`);
                 break;
             }    
         }

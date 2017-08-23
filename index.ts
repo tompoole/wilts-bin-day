@@ -22,9 +22,25 @@ let handlers: Alexa.Handlers = {
     },
  };
 
+function validateAndGetAppId(alexa: Alexa.AlexaObject): string {
+    
+    let appIdsStr = process.env["APP_IDS"] as string,
+        appIds = appIdsStr.split(','),
+        currentAppId = alexa.appId;
+    
+    if (appIds.some(x => x === currentAppId)) return currentAppId;
+
+    console.warn(`App ID '${currentAppId}' not was found in the list of allowed IDs`);
+    return '';
+}
+
  export const handler = function(event: any, context: any, callback: any) {
-    var alexa = Alexa.handler(event, context);
-    alexa.appId = process.env.SKILL_ID;
+    let alexa = Alexa.handler(event, context);
+
+    let appId = validateAndGetAppId(alexa);
+    alexa.appId = appId;
+
     alexa.registerHandlers(handlers);
     alexa.execute();
  }
+

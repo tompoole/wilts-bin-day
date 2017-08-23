@@ -8,6 +8,8 @@ import ErrorType from "./errorTypes";
 import {createResponseFromCollectionData} from './responseGenerator'
 import * as addressHelpers from './addressHelpers'
 import { ICouncilProvider, ICollectionItem } from "./council-providers/ICouncilApi";
+import * as util from 'util';
+import { CachedAlexaApi } from "./cachedAlexaApi";
 
 
 export class GetCollectionsIntent implements Intent {
@@ -23,7 +25,10 @@ export class GetCollectionsIntent implements Intent {
 
     public async handler(alexa: Handler) {
         let address:AddressResponse, addressId: string, collectionData : ICollectionItem[];
+        let userId = alexa.event.session.user.userId;
 
+
+    
         try {
             address = await this._alexaApi.getAddressForDevice(alexa.event);
         }
@@ -42,7 +47,6 @@ export class GetCollectionsIntent implements Intent {
         try {
             let providers = this._providerFactory.getCouncilProvidersByPostcode(address.postcode);
             console.log(`Getting address ID for address: ${address.postcode}, ${address.addressLine1}`);
-
             addressResult = await this._addressService.getAddressId(providers, address.postcode, address.addressLine1);
         }
         catch (e) {
@@ -75,7 +79,7 @@ export class GetCollectionsIntent implements Intent {
     }
 
     static create(): GetCollectionsIntent {
-        let alexaApi = new AlexaApi();
+        let alexaApi = new CachedAlexaApi(new AlexaApi());
         return new GetCollectionsIntent(new AddressService(), alexaApi);
     }
 }

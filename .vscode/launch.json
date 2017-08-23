@@ -15,7 +15,11 @@
             "name": "Launch Typescript",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/index.ts",
+            "program": "${workspaceRoot}/testLocal.ts",
+            "args": [
+                "--address=\"6 Miles\"",
+                "--postcode=BS82JN"
+            ],
             "preLaunchTask": "build"
         },
         {

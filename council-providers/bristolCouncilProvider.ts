@@ -32,7 +32,8 @@ export class BristolCouncilProvider implements ICouncilProvider {
 
                 return [{
                     UPRN: address.UPRN,
-                    address: address.addressFull
+                    address: address.addressFull,
+                    district: ''
                 }];
             }
             else {
@@ -41,7 +42,8 @@ export class BristolCouncilProvider implements ICouncilProvider {
                 return properties.map(p => {
                     return {
                         UPRN: p.GAZ_ID,
-                        addressFull: p.addressFull
+                        address: p.addressFull,
+                        district: ''
                     }
                 });
             }
@@ -91,6 +93,11 @@ export class BristolCouncilProvider implements ICouncilProvider {
             let baseIndex = i * 3;
             let name = items[baseIndex];
             let nextCollection = items[baseIndex+2];
+
+            // Refuse is a confusing homograph, Alexa says the verb 'refuse' - change it to household waste.
+            if ((/refuse/i).exec(name)) {
+                name = 'Household waste';
+            }
 
             collections.push({
                 id: 0,

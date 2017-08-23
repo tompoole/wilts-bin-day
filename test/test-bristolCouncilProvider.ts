@@ -5,7 +5,7 @@ import { BristolCouncilProvider } from '../council-providers/bristolCouncilProvi
 import * as fs from 'fs';
 
 
-@suite(slow(1000), timeout(5000)) 
+@suite(slow(1000), timeout(5000))
 class BristolCouncilProviderTests {
     
     provider:BristolCouncilProvider;
@@ -61,7 +61,7 @@ class BristolCouncilProviderTests {
 
         collectionData.length.should.be.equal(2);
 
-        collectionData[0].name.should.be.equal("Refuse");
+        collectionData[0].name.should.be.equal("Household waste");
         
         collectionData[1].date.should.be.a('date');
         collectionData[1].date.getFullYear().should.be.equal(2017);

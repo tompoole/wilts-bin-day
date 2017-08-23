@@ -38,4 +38,22 @@ import {expect} from 'chai'
         }
         
     }
+
+    @test 'Outcode extractor extracts outcode from postcode'() {
+        var postcodes = [
+            {postcode: "SN15 1AA", expectedOutcode: "SN15"},
+            {postcode: "BA1 2BA", expectedOutcode: "BA1"},
+            {postcode: "W1 9ZZ", expectedOutcode: "W1"},
+            {postcode: "SN149ZZ", expectedOutcode: "SN14"},
+            {postcode: "BS81AA", expectedOutcode: "BS8"}
+        ]
+
+        for (let i in postcodes) {
+            let testItem = postcodes[i];
+            let outcode = addressHelpers.getOutwardCodeFromPostcode(testItem.postcode);
+
+            expect(outcode).to.be.equal(testItem.expectedOutcode);
+
+        }
+    }
 }
